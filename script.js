@@ -5,6 +5,9 @@ const INPUTS = document.querySelectorAll('input[type="button"]');
 const PLUS_SIGN = document.getElementById('plus');
 const EGAL_SIGN = document.getElementById('egal');
 const CLEAR_SIGN = document.getElementById('clear');
+const MINUS_SIGN = document.getElementById('minus');
+const TIMES_SIGN = document.getElementById('times')
+const DIVIDE_SIGN = document.getElementById('divide')
 
 let firstNumber = '';
 let currentOperator = '';
@@ -39,13 +42,24 @@ function calculate() {
             case '+':
                 result = num1 + num2;
                 break;
-            // Ajoutez d'autres opérations si nécessaire
+
+            case '-':
+                result = num1 - num2;
+                break;
+            
+            case '*':
+                result = num1 * num2;
+                break;
+        
+            case '/':
+                result = num1 / num2;
+                break;    
         }
         
         CALCULATOR_SCREEN.value = result;
         
         // Réinitialiser pour le prochain calcul
-        firstNumber = result.toString();
+        firstNumber = '';
         secondNumber = '';
         currentOperator = '';
     }
@@ -67,3 +81,6 @@ INPUTS.forEach(input => {
 PLUS_SIGN.addEventListener('click', whenOperatorClicked);
 EGAL_SIGN.addEventListener('click', calculate);
 CLEAR_SIGN.addEventListener('click', clearAll);
+MINUS_SIGN.addEventListener('click', whenOperatorClicked)
+TIMES_SIGN.addEventListener('click', whenOperatorClicked)
+DIVIDE_SIGN.addEventListener('click', whenOperatorClicked)
