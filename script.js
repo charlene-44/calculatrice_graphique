@@ -11,57 +11,86 @@ const DIVIDE_SIGN = document.getElementById('divide')
 
 let firstNumber = '';
 let currentOperator = '';
+let nextOperator = '';
 let secondNumber = '';
+let thirdNumber = '';
 
 // Fonction exécutée lors du clic sur un chiffre
 function whenNumberClicked(event) {
     const value = event.target.value;
+
     if (!currentOperator) {
         firstNumber += value;
         CALCULATOR_SCREEN.value = firstNumber;
-    } else {
+    } else if (currentOperator && !secondNumber) {
         secondNumber += value;
         CALCULATOR_SCREEN.value = `${firstNumber} ${currentOperator} ${secondNumber}`;
+    } else if (currentOperator && secondNumber && !nextOperator) {
+        thirdNumber += value;
+        CALCULATOR_SCREEN.value = `${firstNumber} ${currentOperator} ${secondNumber} ${thirdNumber}`;
+    } else if (secondNumber && nextOperator) {
+        thirdNumber += value;
+        CALCULATOR_SCREEN.value = `${firstNumber} ${currentOperator} ${secondNumber} ${nextOperator} ${thirdNumber}`;
     }
 }
 
 // Fonction exécutée lors du clic sur un opérateur
 function whenOperatorClicked(event) {
-    currentOperator = event.target.value;
-    CALCULATOR_SCREEN.value = `${firstNumber} ${currentOperator}`;
+    if (firstNumber && currentOperator && secondNumber && thirdNumber) {
+        calculate();
+        nextOperator = event.target.value;
+    } else if (firstNumber && currentOperator && secondNumber) {
+        nextOperator = event.target.value;
+        CALCULATOR_SCREEN.value = `${firstNumber} ${currentOperator} ${secondNumber} ${nextOperator}`;
+    } else if (firstNumber) {
+        currentOperator = event.target.value;
+        CALCULATOR_SCREEN.value = `${firstNumber} ${currentOperator}`;
+    }
 }
 
-let result = 0;
-// Fonction pour calculer une addition
+// Fonction exécutée lors du clic sur le bouton égal
 function calculate() {
+    let result = 0;
     if (firstNumber && secondNumber && currentOperator) {
         const num1 = parseFloat(firstNumber);
         const num2 = parseFloat(secondNumber);
-      
-        switch(currentOperator) {
+        const num3 = thirdNumber ? parseFloat(thirdNumber) : 0;
+
+        switch (currentOperator) {
             case '+':
                 result = num1 + num2;
                 break;
-
             case '-':
                 result = num1 - num2;
                 break;
-            
             case '*':
                 result = num1 * num2;
                 break;
-        
             case '/':
                 result = num1 / num2;
-                break;    
+                break;
         }
-        
+
+        if (nextOperator) {
+            switch (nextOperator) {
+                case '+':
+                    result = (num1 * num2) + num3;
+                    break;
+                case '-':
+                    result = (num1 * num2) - num3;
+                    break;
+                case '/':
+                    result = (num1 * num2) / num3;
+                    break;
+            }
+        }
+
         CALCULATOR_SCREEN.value = result;
-        
-        // Réinitialiser pour le prochain calcul
-        firstNumber = '';
+        firstNumber = result.toString();
         secondNumber = '';
+        thirdNumber = '';
         currentOperator = '';
+        nextOperator = '';
     }
 }
 
